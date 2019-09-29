@@ -1,5 +1,8 @@
+/*
+	TO DO: 
+		Gather data for different array sizes and put those in a table 
 
-
+*/
 #include <iostream> 
 #include <ctime>
 using namespace std;
@@ -31,29 +34,44 @@ void printArray(int arr[], int n)
 	cout << endl;
 }
 
+void copyArr(int arr[], int temp[] ,int size) {
+	for (int x = 0; x < size; x++) {
+		temp[x] = arr[x];
+	}
+
+}
+
 
 int main()
 {
-
 	srand(time(NULL));
-	int num = rand() % 100 + 1;		// generates a number between 1 - 100
-	clock_t begin = clock();		// begin clock time
-	int sum = 0;
-	for (int x = 0; x < 10; x++) {
-		cout << num << endl;
-		num = rand() %100 + 1;		// re generate random num
+	static int size = 16;
+	int arr[16];
+	
+
+	// Generate random numbers in the array 
+	for (int x = 0; x < size; x++) {
+		arr[x] = rand() % 100 + 1;
 	}
 
+	// Temp array to be sorted
+	int temp[16];
+
+	// Print unsorted array 
+	printArray(arr, size);
+
+	clock_t begin = clock();		// begin clock time
+
+	// Loop to copy array into temp then call insertion sort
+	for (int y = 0; y < 600000; y++) {
+		copyArr(arr, temp, size);
+		insertionSort(temp, size);
+	}
 	clock_t end = clock();			// end clock time 
 	double time = double(end - begin) / CLOCKS_PER_SEC;
 
-	cout << "Time: " << time << endl;
-
-	int arr[] = { 12, 11, 13, 5, 6 };
-	int n = sizeof(arr) / sizeof(arr[0]);
-
-	insertionSort(arr, n);
-	printArray(arr, n);
+	cout << "Time: " << time << endl << endl;
+	printArray(temp, size);
 
 	return 0;
 }
