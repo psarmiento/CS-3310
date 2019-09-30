@@ -3,50 +3,58 @@
 #include <ctime>
 using namespace std;
 
-void merge2(int sortMe[], int &low, int &mid, int &high);
-
-void mergeSort(int sortMe[], int low, int high)
+void merge(int arr[], int low, int mid, int end)
 {
-	int mid;
-	if (low < high)
-	{
-		mid = low + (high - 1) / 2;
-
-		// Sort first two halves 
-		mergeSort(sortMe, low, mid);
-		mergeSort(sortMe, mid + 1, high);
-		merge2(sortMe, low, mid, high);
-	}
-}
-
-// Pass in vector to be merged with 
-void merge2(int sortMe[], int &low, int &mid, int &high) {
 	int j = mid + 1;
 
-	// If already sorted, then exit out
-	if (sortMe[mid] <= sortMe[j]) {
+	// If the direct merge is already sorted 
+	if (arr[mid] <= arr[j]) {
 		return;
 	}
 
-	while (low <= mid && j <= high) {
-		// if first element is already sorted
-		if (sortMe[low] <= sortMe[j])
-			low++;
+	// Two pointers to maintain start 
+	// of both arrays to merge 
+	while (low <= mid && j <= end) {
 
+		// If element 1 is in right place 
+		if (arr[low] <= arr[j]) {
+			low++;
+		}
 		else {
-			int value = sortMe[j];
+			int value = arr[j];
 			int index = j;
 
+			// Shift all the elements between element 1 
+			// element 2, right by 1. 
 			while (index != low) {
-				sortMe[index] = sortMe[index - 1];
+				arr[index] = arr[index - 1];
 				index--;
 			}
-			sortMe[low] = value;
+			arr[low] = value;
 
+			// Update all the pointers 
 			low++;
 			mid++;
 			j++;
 		}
+	}
+}
+
+/* l is for left index and r is right index of the
+   sub-array of arr to be sorted */
+void mergeSort(int arr[], int low, int high)
+{
+	if (low < high) {
+
+		// Same as (l + r) / 2, but avoids overflow 
+		// for large l and r 
+		int mid = low + (high - low) / 2;
+
+		// Sort first and second halves 
+		mergeSort(arr, low, mid);
+		mergeSort(arr, mid + 1, high);
+
+		merge(arr, low, mid, high);
 	}
 }
 
@@ -72,7 +80,7 @@ int main()
 {
 	srand(time(NULL));
 
-	const int size = 8;
+	const int size = 65536;
 	int arr[size];
 
 	// Temp array to be sorted
@@ -85,14 +93,14 @@ int main()
 
 
 	// Print unsorted array 
-	cout << "Unsorted array: ";
-	printArray(arr, size);
-	cout << endl;
+	//cout << "Unsorted array: ";
+	//printArray(arr, size);
+	//cout << endl;
 
 	clock_t begin = clock();		// begin clock time
 
 	// Loop to copy array into temp then call insertion sort
-	for (int y = 0; y < 3; y++) {
+	for (int y = 0; y < 10; y++) {
 		copyArr(arr, temp, size);
 		mergeSort(temp, 0, size - 1);
 	}
@@ -101,8 +109,8 @@ int main()
 
 	cout << "Time: " << time << endl;
 
-	cout << "Sorted array: ";
-	printArray(temp, size);
+	//cout << "Sorted array: ";
+	//printArray(temp, size);
 
 	return 0;
 }
