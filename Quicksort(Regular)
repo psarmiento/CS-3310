@@ -3,12 +3,12 @@
 using namespace std;
 
 
-int partition(int *a, int start, int end)
+int partition(int *a, int low, int high)
 {
-	int pivot = a[end];
+	int pivot = a[high];
 	//P-index indicates the pivot value index
 
-	int P_index = start;
+	int p = low;
 	int i, t; //t is temporary variable
 
 	//Here we will check if array value is 
@@ -16,24 +16,24 @@ int partition(int *a, int start, int end)
 	//then we will place it at left side
 	//by swapping 
 
-	for (i = start; i < end; i++)
+	for (i = low; i < high; i++)
 	{
 		if (a[i] <= pivot)
 		{
 			t = a[i];
-			a[i] = a[P_index];
-			a[P_index] = t;
-			P_index++;
+			a[i] = a[p];
+			a[p] = t;
+			p++;
 		}
 	}
 	//Now exchanging value of
 	//pivot and P-index
-	t = a[end];
-	a[end] = a[P_index];
-	a[P_index] = t;
+	t = a[high];
+	a[high] = a[p];
+	a[p] = t;
 
 	//at last returning the pivot value index
-	return P_index;
+	return p;
 }
 void Quicksort(int *a, int start, int end)
 {
@@ -45,6 +45,11 @@ void Quicksort(int *a, int start, int end)
 	}
 }
 
+// copy array to be sorted into temp array 
+void copy(int temp[], int arr[], int size) {
+	for (int x = 0; x < size; x++)
+		temp[x] = arr[x];
+}
 
 void printArray(int arr[], int size) {
 	for (int x = 0; x < size; x++)
@@ -57,8 +62,9 @@ int main()
 {
 	srand(time(NULL));
    
-	const int SIZE = 4;
+	const int SIZE = 65536;
 	int arr[SIZE];
+	int temp[SIZE];
 
 	// Generate random numbers in array 
 	for (int x = 0; x < SIZE; x++) {
@@ -66,13 +72,23 @@ int main()
 	}
 
 	// print unsorted array 
-	cout << "Unsorted array: ";
-	printArray(arr, SIZE);
+	//cout << "Unsorted array: ";
+	//printArray(arr, SIZE);
 
-	Quicksort(arr, 0, SIZE - 1);
+	// sort temp array and get average time from loop
+	clock_t begin = clock();
+	for (int x = 0; x < 10; x++) {
+		copy(temp, arr, SIZE);
+		Quicksort(temp, 0, SIZE - 1);
+	
+	}
+	clock_t end = clock();
+	double time = double(end - begin) / CLOCKS_PER_SEC;
 
+
+	cout << "Time: " << time << endl;
 	// print sorted array 
-	cout << "Sorted array: ";
-	printArray(arr, SIZE);
+	//cout << "Sorted array: ";
+	//printArray(arr, SIZE);
 }
 
