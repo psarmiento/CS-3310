@@ -3,7 +3,7 @@
 using namespace std;
 
 
-int partition(int *a, int low, int high)
+int partition(int a[], int low, int high)
 {
 	int pivot = a[high];
 	//P-index indicates the pivot value index
@@ -11,11 +11,7 @@ int partition(int *a, int low, int high)
 	int p = low;
 	int i, t; //t is temporary variable
 
-	//Here we will check if array value is 
-	//less than pivot
-	//then we will place it at left side
-	//by swapping 
-
+	// Check of array value is less than pivot
 	for (i = low; i < high; i++)
 	{
 		if (a[i] <= pivot)
@@ -62,7 +58,7 @@ int main()
 {
 	srand(time(NULL));
    
-	const int SIZE = 65536;
+	const int SIZE = 8;
 	int arr[SIZE];
 	int temp[SIZE];
 
@@ -72,8 +68,8 @@ int main()
 	}
 
 	// print unsorted array 
-	//cout << "Unsorted array: ";
-	//printArray(arr, SIZE);
+	cout << "Unsorted array: ";
+	printArray(arr, SIZE);
 
 	// sort temp array and get average time from loop
 	clock_t begin = clock();
@@ -88,7 +84,7 @@ int main()
 
 	cout << "Time: " << time << endl;
 	// print sorted array 
-	//cout << "Sorted array: ";
-	//printArray(arr, SIZE);
+	cout << "Sorted array: ";
+	printArray(temp, SIZE);
 }
 
