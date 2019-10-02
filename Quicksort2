@@ -1,0 +1,125 @@
+/*
+	Quicksort 2 
+	This sorting algorithm will use quicksort on an array with size > 16 
+	With arrays AND subarrays < 16, instead of calling partition, insertion sort will 
+	be used to finish the sorting.
+
+
+*/
+#include <iostream>
+#include <ctime>
+using namespace std;
+
+// Only to be called on arrays and subarrays < 16
+void insertionSort(int arr[], int size)
+{
+	cout << "Insertion sort called bitch\n";
+	int i, key, j;
+	for (i = 1; i < size; i++)
+	{
+		key = arr[i];
+		j = i - 1;
+
+		while (j >= 0 && arr[j] > key)
+		{
+			arr[j + 1] = arr[j];
+			j = j - 1;
+		}
+		arr[j + 1] = key;
+	}
+}
+
+int partition(int *a, int low, int high)
+{
+	int pivot = a[high];
+	//P-index indicates the pivot value index
+
+	int p = low;
+	int i, t; //t is temporary variable
+
+	// Check of array value is less than pivot
+	for (i = low; i < high; i++)
+	{
+		if (a[i] <= pivot)
+		{
+			t = a[i];
+			a[i] = a[p];
+			a[p] = t;
+			p++;
+		}
+	}
+	//Now exchanging value of
+	//pivot and P-index
+	t = a[high];
+	a[high] = a[p];
+	a[p] = t;
+
+	//at last returning the pivot value index
+	return p;
+}
+void Quicksort(int *a, int low, int high)
+{
+	
+	if (low < high)
+	{
+		// Calculate array size and call insertion sort if necessary 
+		int arraySize = high - low;
+		if (arraySize <= 16) {
+			insertionSort(a, arraySize + 1);
+		}
+
+		else {
+			int P_index = partition(a, low, high);
+			Quicksort(a, low, P_index - 1);
+			Quicksort(a, P_index + 1, high);
+		}
+	}
+}
+
+// copy array to be sorted into temp array 
+void copy(int temp[], int arr[], int size) {
+	for (int x = 0; x < size; x++)
+		temp[x] = arr[x];
+}
+
+void printArray(int arr[], int size) {
+	for (int x = 0; x < size; x++)
+		cout << arr[x] << " ";
+
+	cout << endl;
+}
+
+int main()
+{
+	srand(time(NULL));
+
+	const int SIZE = 32;
+	int arr[SIZE];
+	int temp[SIZE];
+
+	// Generate random numbers in array 
+	for (int x = 0; x < SIZE; x++) {
+		arr[x] = rand() % 100 + 1;
+	}
+
+	// print unsorted array 
+	cout << "Unsorted array: ";
+	printArray(arr, SIZE);
+
+	// sort temp array and get average time from loop
+	clock_t begin = clock();
+	for (int x = 0; x < 2; x++) {
+		copy(temp, arr, SIZE);
+		Quicksort(temp, 0, SIZE - 1);
+
+	}
+	clock_t end = clock();
+	double time = double(end - begin) / CLOCKS_PER_SEC;
+
+
+	cout << "Time: " << time << endl;
+	// print sorted array 
+	cout << "Sorted array: ";
+	printArray(temp, SIZE);
+}
+
