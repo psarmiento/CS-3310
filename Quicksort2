@@ -13,7 +13,6 @@ using namespace std;
 // Only to be called on arrays and subarrays < 16
 void insertionSort(int arr[], int size)
 {
-	cout << "Insertion sort called bitch\n";
 	int i, key, j;
 	for (i = 1; i < size; i++)
 	{
@@ -93,7 +92,7 @@ int main()
 {
 	srand(time(NULL));
 
-	const int SIZE = 32;
+	const int SIZE = 65536;
 	int arr[SIZE];
 	int temp[SIZE];
 
@@ -103,12 +102,14 @@ int main()
 	}
 
 	// print unsorted array 
-	cout << "Unsorted array: ";
-	printArray(arr, SIZE);
+	if (SIZE <= 32) {
+		cout << "Unsorted array: ";
+		printArray(arr, SIZE);
+	}
 
 	// sort temp array and get average time from loop
 	clock_t begin = clock();
-	for (int x = 0; x < 2; x++) {
+	for (int x = 0; x < 100; x++) {
 		copy(temp, arr, SIZE);
 		Quicksort(temp, 0, SIZE - 1);
 
@@ -116,10 +117,12 @@ int main()
 	clock_t end = clock();
 	double time = double(end - begin) / CLOCKS_PER_SEC;
 
-
-	cout << "Time: " << time << endl;
-	// print sorted array 
-	cout << "Sorted array: ";
-	printArray(temp, SIZE);
+	cout << "Size: " << SIZE << endl;
+	cout << "Time: " << time / SIZE << endl;
+	if (SIZE <= 32) {
+		// print sorted array 
+		cout << "Sorted array: ";
+		printArray(temp, SIZE);
+	}
 }
 
