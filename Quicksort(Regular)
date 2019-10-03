@@ -1,3 +1,6 @@
+/*
+	Regular implementation of Quicksort, while also providing run time 
+*/
 #include <iostream>
 #include <ctime>
 using namespace std;
@@ -6,9 +9,8 @@ using namespace std;
 int partition(int a[], int low, int high)
 {
 	int pivot = a[high];
-	//P-index indicates the pivot value index
 
-	int p = low;
+	int j = low;
 	int i, t; //t is temporary variable
 
 	// Check of array value is less than pivot
@@ -17,27 +19,27 @@ int partition(int a[], int low, int high)
 		if (a[i] <= pivot)
 		{
 			t = a[i];
-			a[i] = a[p];
-			a[p] = t;
-			p++;
+			a[i] = a[j];
+			a[j] = t;
+			j++;
 		}
 	}
 	//Now exchanging value of
 	//pivot and P-index
 	t = a[high];
-	a[high] = a[p];
-	a[p] = t;
+	a[high] = a[j];
+	a[j] = t;
 
 	//at last returning the pivot value index
-	return p;
+	return j;
 }
-void Quicksort(int *a, int start, int end)
+void Quicksort(int arr[], int high, int low)
 {
-	if (start < end)
+	if (high < low)
 	{
-		int P_index = partition(a, start, end);
-		Quicksort(a, start, P_index - 1);
-		Quicksort(a, P_index + 1, end);
+		int index = partition(arr, high, low);
+		Quicksort(arr, high, index - 1);
+		Quicksort(arr, index + 1, low);
 	}
 }
 
@@ -57,7 +59,7 @@ void printArray(int arr[], int size) {
 int main()
 {
 	srand(time(NULL));
-   
+
 	const int SIZE = 8;
 	int arr[SIZE];
 	int temp[SIZE];
@@ -68,15 +70,16 @@ int main()
 	}
 
 	// print unsorted array 
-	cout << "Unsorted array: ";
-	printArray(arr, SIZE);
-
+	if (SIZE <= 32) {
+		cout << "Unsorted array: ";
+		printArray(arr, SIZE);
+	}
 	// sort temp array and get average time from loop
 	clock_t begin = clock();
 	for (int x = 0; x < 10; x++) {
 		copy(temp, arr, SIZE);
 		Quicksort(temp, 0, SIZE - 1);
-	
+
 	}
 	clock_t end = clock();
 	double time = double(end - begin) / CLOCKS_PER_SEC;
@@ -84,7 +87,8 @@ int main()
 
 	cout << "Time: " << time << endl;
 	// print sorted array 
-	cout << "Sorted array: ";
-	printArray(temp, SIZE);
+	if (SIZE <= 32) {
+		cout << "Sorted array: ";
+		printArray(temp, SIZE);
+	}
 }
-
