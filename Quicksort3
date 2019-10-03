@@ -1,0 +1,109 @@
+/*
+	Quicksort3.cpp 
+	This quicksort is very similar to regular quicksort but will randomly swap arr[low] with 
+	a randomized array element if SIZE > 16
+*/
+#include <iostream>
+#include <ctime>
+using namespace std;
+
+void printArray(int arr[], int size);
+int partition(int a[], int low, int high)
+{
+	int pivot = a[high];
+
+	int j = low;
+	int i, t; //t is temporary variable
+
+	// Check of array value is less than pivot
+	for (i = low; i < high; i++)
+	{
+		if (a[i] <= pivot)
+		{
+			t = a[i];
+			a[i] = a[j];
+			a[j] = t;
+			j++;
+		}
+	}
+	
+	// Swap values
+	t = a[high];
+	a[high] = a[j];
+	a[j] = t;
+
+	return j;
+}
+void Quicksort(int a[], int start, int end, int randSwap)
+{
+	if (start < end)
+	{
+		int size = end - start;
+		// Before calling partition, swap a[0]
+		// with a random array element if size > 16
+		if (size > 16) {
+			printArray(a, size);
+			int temp = a[0];
+			cout << "Size value: " << size << endl;
+			cout << "Random value: " << randSwap << endl;
+			a[0] = a[randSwap];
+			a[randSwap] = temp;
+			printArray(a, size);
+		}
+
+		int index = partition(a, start, end);
+		Quicksort(a, start, index - 1, rand() % (end - index + 1) + 1);
+		Quicksort(a, index + 1, end, rand() % (end - index + 1) + 1);
+	}
+}
+
+// copy array to be sorted into temp array 
+void copy(int temp[], int arr[], int size) {
+	for (int x = 0; x < size; x++)
+		temp[x] = arr[x];
+}
+
+void printArray(int arr[], int size) {
+	for (int x = 0; x < size; x++)
+		cout << arr[x] << " ";
+
+	cout << endl;
+}
+
+int main()
+{
+	srand(time(NULL));
+
+	const int SIZE = 64;
+	int arr[SIZE];
+	int temp[SIZE];
+
+	// Generate random numbers in array 
+	for (int x = 0; x < SIZE; x++) {
+		arr[x] = rand() % 100 + 1;
+	}
+
+	// print unsorted array 
+	if (SIZE <= 32) {
+		cout << "Unsorted array: ";
+		printArray(arr, SIZE);
+	}
+
+	// sort temp array and get average time from loop
+	clock_t begin = clock();
+	for (int x = 0; x < 10; x++) {
+		copy(temp, arr, SIZE);
+		Quicksort(temp, 0, SIZE - 1, rand() % SIZE);
+
+	}
+	clock_t end = clock();
+	double time = double(end - begin) / CLOCKS_PER_SEC;
+
+
+	cout << "Time: " << time << endl;
+	// print sorted array 
+	if (SIZE <= 100) {
+		cout << "Sorted array: ";
+		printArray(temp, SIZE);
+	}
+}
