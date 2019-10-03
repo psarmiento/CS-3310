@@ -84,8 +84,8 @@ int main()
 	clock_t end = clock();
 	double time = double(end - begin) / CLOCKS_PER_SEC;
 
-
-	cout << "Time: " << time << endl;
+	cout << "Size: " << SIZE << endl;
+	cout << "Time: " << time / SIZE << endl;
 	// print sorted array 
 	if (SIZE <= 32) {
 		cout << "Sorted array: ";
